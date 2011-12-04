@@ -1027,4 +1027,27 @@
 
     <!-- Flag indicating if the speed up audio on mt call code should be executed -->
     <bool name="config_speed_up_audio_on_mt_calls">false</bool>
+
+    <!-- Boolean to enable stk functionality on Samsung phones -->
+    <bool name="config_samsung_stk">false</bool>
+
+    <!-- empty string to disable, or like: /sys/kernel/fast_charge/force_fast_charge
+         it is disabled by default so devices need to add an overlay to enable-->
+    <string name="config_fastChargePath" translatable="false"></string>
+
+    <!-- Device has a h/w rotation lock switch -->
+    <bool name="config_hasRotationLockSwitch">false</bool>
+
+    <!-- If true, adds support for no delay A2DP in Samsung devices -->
+    <bool name="config_noDelayInATwoDP">false</bool>
+
+    <!-- Timeout in MS for how long you have to long-press the back key to
+         kill the foreground app. -->
+    <integer name="config_backKillTimeout">750</integer>
+
+    <!-- LUN file to be used by legacy USB manager.
+         The existence of this file will be used to determine in the
+         legacy USB manager should be started. -->
+    <string name="config_legacyUmsLunFile">/sys/devices/platform/usb_mass_storage/lun0/file</string>
+
 </resources>
