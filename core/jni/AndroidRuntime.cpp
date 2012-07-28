@@ -183,6 +183,10 @@ extern int register_android_server_BluetoothService(JNIEnv* env);
 extern int register_android_server_BluetoothEventLoop(JNIEnv *env);
 extern int register_android_server_BluetoothA2dpService(JNIEnv* env);
 #endif //HAVE_BLUEZ_JNI
+extern int register_android_content_res_PackageRedirectionMap(JNIEnv* env);
+#ifdef QCOM_HARDWARE
+extern int register_com_android_internal_app_ActivityTrigger(JNIEnv *env);
+#endif
 
 static AndroidRuntime* gCurRuntime = NULL;
 
