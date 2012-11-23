@@ -1816,5 +1816,6 @@
   <java-symbol type="string" name="inputMethod" />
 
   <java-symbol type="bool" name="config_forceDisableHardwareKeyboard" />
+  <java-symbol type="bool" name="config_smsSamsungCdmaAlternateMessageIDEncoding" />
 
 </resources>
