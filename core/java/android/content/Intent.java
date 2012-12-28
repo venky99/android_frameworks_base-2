@@ -1,5 +1,7 @@
 /*
  * Copyright (C) 2006 The Android Open Source Project
+ * This code has been modified.  Portions copyright (C) 2010, T-Mobile USA, Inc.
+ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2135,6 +2137,55 @@ public class Intent implements Parcelable, Cloneable {
     @SdkConstant(SdkConstantType.BROADCAST_INTENT_ACTION)
     public static final String ACTION_HEADSET_PLUG =
             "android.intent.action.HEADSET_PLUG";
+
+    /**
+     * Intents indicating the FM Rx switching on or off
+     * <p>The intent will have the following extra values:
+     * <ul>
+     *   <li><em>state</em> - 0 for switched off, 1 for switched on. </li>
+     * </ul>
+     * </ul>
+     * @hide
+     */
+    public static final String ACTION_FM =
+            "qualcomm.intent.action.FM";
+
+    /**
+     * Intents indicating the FM Tx switching on or off
+     * <p>The intent will have the following extra values:
+     * <ul>
+     *   <li><em>state</em> - 0 for switched off, 1 for switched on. </li>
+     * </ul>
+     * </ul>
+     * @hide
+     */
+    public static final String ACTION_FM_TX =
+            "qualcomm.intent.action.FMTX";
+
+    /**
+     * Broadcast Action: WiFi Display audio is enabled or disabled
+     *
+     * <p>The intent will have the following extra values:
+     * <ul>
+     *   <li><em>state</em> - 0 for disabled, 1 for enabled. </li>
+     * </ul>
+     * @hide
+     */
+    public static final String ACTION_WIFI_DISPLAY_AUDIO =
+            "qualcomm.intent.action.WIFI_DISPLAY_AUDIO";
+
+    /**
+     * Broadcast Action: WiFi Display video is enabled or disabled
+     *
+     * <p>The intent will have the following extra values:
+     * <ul>
+     *   <li><em>state</em> - 0 for disabled, 1 for enabled. </li>
+     * </ul>
+     * @hide
+     */
+
+    public static final String ACTION_WIFI_DISPLAY_VIDEO =
+            "qualcomm.intent.action.WIFI_DISPLAY_VIDEO";
 
     /**
      * Broadcast Action: An analog audio speaker/headset plugged in or unplugged.
