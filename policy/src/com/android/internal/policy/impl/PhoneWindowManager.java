@@ -1,4 +1,7 @@
 /*
+ * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2012-2013 The CyanogenMod Project
+ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -3261,6 +3264,18 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     }
 
     /**
+    * @return Whether FM is being played right now.
+    */
+    boolean isFMActive() {
+        final AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+        if (am == null) {
+            Log.w(TAG, "isFMActive: couldn't get AudioManager reference");
+            return false;
+        }
+        return am.isFMActive();
+    }
+
+    /**
      * Tell the audio service to adjust the volume appropriate to the event.
      * @param keycode
      */
@@ -3491,10 +3506,19 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         }
                     }
 
-                    if (isMusicActive() && (result & ACTION_PASS_TO_USER) == 0) {
-                        // If music is playing but we decided not to pass the key to the
-                        // application, handle the volume change here.
-                        handleVolumeKey(AudioManager.STREAM_MUSIC, keyCode);
+                }
+                if (isFMActive() && (result & ACTION_PASS_TO_USER) == 0) {
+                    handleVolumeKey(AudioManager.STREAM_FM, keyCode);
+                    break;
+                } else if (isMusicActive() && (result & ACTION_PASS_TO_USER) == 0) {
+                    if (mVolBtnMusicControls && down && (keyCode != KeyEvent.KEYCODE_VOLUME_MUTE)) {
+                        mIsLongPress = false;
+                        int newKeyCode = event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP ?
+                                KeyEvent.KEYCODE_MEDIA_NEXT : KeyEvent.KEYCODE_MEDIA_PREVIOUS;
+                        Message msg = mHandler.obtainMessage(MSG_DISPATCH_VOLKEY_WITH_WAKE_LOCK,
+                                new KeyEvent(event.getDownTime(), event.getEventTime(), event.getAction(), newKeyCode, 0));
+                        msg.setAsynchronous(true);
+                        mHandler.sendMessageDelayed(msg, ViewConfiguration.getLongPressTimeout());
                         break;
                     }
                 }
