@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
  * Copyright (c) 2008-2009, Motorola, Inc.
  *
  * All rights reserved.

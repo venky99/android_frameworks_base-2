@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+=======
+ * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
  * Copyright (c) 2008-2009, Motorola, Inc.
  *
  * All rights reserved.
@@ -351,6 +355,10 @@ public final class HeaderSet {
                     throw new IllegalArgumentException("Length must be between 0 and 0xFFFFFFFF");
                 }
                 mPermission = (Long)headerValue;
+<<<<<<< HEAD
+=======
+                break;
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
             case LENGTH:
                 if (!(headerValue instanceof Long)) {
                     if (headerValue == null) {

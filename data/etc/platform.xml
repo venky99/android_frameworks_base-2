@@ -207,5 +207,6 @@
             file="/system/framework/javax.btobex.jar"/>
     <library name="qcom.fmradio"
             file="/system/framework/qcom.fmradio.jar"/>
-
+    <library name="javax.btobex"
+            file="/system/framework/javax.btobex.jar"/>
 </permissions>

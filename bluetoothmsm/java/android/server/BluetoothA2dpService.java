@@ -83,6 +83,10 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
     private final WakeLock mWakeLock;
 
     private static final int MSG_CONNECTION_STATE_CHANGED = 0;
+<<<<<<< HEAD
+=======
+    private boolean mIsMusicAppPlaying = false;
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 
     /* AVRCP1.3 Metadata variables */
     private String mTrackName = DEFAULT_METADATA_STRING;
@@ -104,8 +108,13 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
     /*AVRCP 1.3 Music App Intents */
     private static final String PLAYSTATE_CHANGED = "com.android.music.playstatechanged";
     private static final String META_CHANGED = "com.android.music.metachanged";
+<<<<<<< HEAD
     private static final String PLAYSTATUS_REQUEST = "com.qualcomm.avrcp.playstatusrequest";
     private static final String PLAYSTATUS_RESPONSE = "com.qualcomm.avrcp.playstatusresponse";
+=======
+    private static final String PLAYSTATUS_REQUEST = "com.qualcomm.music.playstatusrequest";
+    private static final String PLAYSTATUS_RESPONSE = "com.qualcomm.music.playstatusresponse";
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 
     private final static String DEFAULT_METADATA_STRING = "Unknown";
     private final static String DEFAULT_METADATA_NUMBER = "0";
@@ -131,10 +140,18 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
 
     TelephonyManager tmgr;
     private static final String ACTION_METADATA_CHANGED  =
+<<<<<<< HEAD
         "qualcomm.MediaPlayer.action.METADATA_CHANGED";
 
     private static final String PLAYERSETTINGS_REQUEST = "com.qualcomm.avrcp.playersettingsrequest";
     private static final String PLAYERSETTINGS_RESPONSE = "com.qualcomm.avrcp.playersettingsresponse";
+=======
+        "com.qualcomm.MediaPlayer.action.METADATA_CHANGED";
+
+    private static final String PLAYERSETTINGS_REQUEST = "com.qualcomm.music.playersettingsrequest";
+    private static final String PLAYERSETTINGS_RESPONSE =
+        "com.qualcomm.music.playersettingsresponse";
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 
     private class PlayerSettings {
         public byte attr;
@@ -398,6 +415,7 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
                     sendEvent(path, EVENT_TRACK_CHANGED, Long.valueOf(mMediaNumber));
                 }
             } else if (action.equals(PLAYSTATE_CHANGED)) {
+<<<<<<< HEAD
                 String currentTrackName = intent.getStringExtra("track");
                 if ((currentTrackName != null) && (!currentTrackName.equals(mTrackName))) {
                     mTrackName = currentTrackName;
@@ -437,6 +455,12 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
                 for (String path: getConnectedSinksPaths()) {
                     sendEvent(path, EVENT_PLAYSTATUS_CHANGED, (long)mPlayStatus);
                 }
+=======
+                log("Received PLAYSTATE_CHANGED");
+                /*Update the current play state of Music App.*/
+                mIsMusicAppPlaying = intent.getBooleanExtra("playing", false);
+                log("Playing Status" + mIsMusicAppPlaying);
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
             } else if (action.equals(PLAYSTATUS_RESPONSE)) {
                 if(DBG) Log.d(TAG, "Received PLAYSTATUS_RESPONSE");
                 long extra = intent.getLongExtra("duration", 0);
@@ -451,11 +475,16 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
                 if(DBG) Log.d(TAG, "Sending Playstatus");
                 sendPlayStatus(mPlayStatusRequestPath);
             } else if (action.equals(ACTION_METADATA_CHANGED)) {
+<<<<<<< HEAD
+=======
+                log("Received ACTION_METADATA_CHANGED");
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
                 Uri uri = intent.getParcelableExtra("uripath");
                 log("uri is " + uri + "mUri is " + mUri);
 
                 if (uri == null)
                     return;
+<<<<<<< HEAD
                 /* Ignore posting of track change intent for uri location
                    content://media/internal/ content://settings/system/alarm_alertmUri */
                 String uriPath = uri.toString();
@@ -470,6 +499,14 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
                            return;
                        }
                     }
+=======
+                /*Check if MusicApp is not playing state and previous Playstatus of
+                  Music App is not equal to PLAYING before we update the PLAYSTATUS
+                  or Metadata to Remote device.*/
+                if ((mIsMusicAppPlaying == false) && (mPlayStatus != STATUS_PLAYING)) {
+                    log("Internal audio file data, ignoring");
+                    return;
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
                 }
 
                 String tempMediaNumber = mMediaNumber;
@@ -834,6 +871,10 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
         mIntentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         mIntentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         mIntentFilter.addAction(AudioManager.VOLUME_CHANGED_ACTION);
+<<<<<<< HEAD
+=======
+        mIntentFilter.addAction(PLAYSTATE_CHANGED);
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
         mIntentFilter.addAction(ACTION_METADATA_CHANGED);
         mIntentFilter.addAction(PLAYERSETTINGS_RESPONSE);
         mContext.registerReceiver(mReceiver, mIntentFilter);
@@ -927,10 +968,17 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
                     case BluetoothA2dp.STATE_DISCONNECTING:
                         handleSinkStateChange(device, BluetoothA2dp.STATE_DISCONNECTING,
                                               BluetoothA2dp.STATE_DISCONNECTED);
+<<<<<<< HEAD
                         break;
                 }
             }
             mAudioDevices.clear();
+=======
+                        mAudioDevices.clear();
+                        break;
+                }
+            }
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
         }
 
     }

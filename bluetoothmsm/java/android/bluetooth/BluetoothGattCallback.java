@@ -8,7 +8,11 @@
  *        * Redistributions in binary form must reproduce the above copyright
  *          notice, this list of conditions and the following disclaimer in the
  *          documentation and/or other materials provided with the distribution.
+<<<<<<< HEAD
  *        * Neither the name of Code Aurora nor
+=======
+ *        * Neither the name of The Linux Foundation nor
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
  *          the names of its contributors may be used to endorse or promote
  *          products derived from this software without specific prior written
  *          permission.

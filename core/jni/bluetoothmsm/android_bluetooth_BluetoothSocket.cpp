@@ -149,6 +149,10 @@ static void initSocketNative(JNIEnv *env, jobject obj) {
     case TYPE_RFCOMM:
         lm |= auth ? RFCOMM_LM_AUTH : 0;
         lm |= encrypt ? RFCOMM_LM_ENCRYPT : 0;
+<<<<<<< HEAD
+=======
+        lm |= (auth && encrypt) ? RFCOMM_LM_SECURE : 0;
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
         if (!strcmp("true", value)) {
             ALOGI("Setting Master socket option");
             lm |= RFCOMM_LM_MASTER;
@@ -158,6 +162,10 @@ static void initSocketNative(JNIEnv *env, jobject obj) {
     case TYPE_EL2CAP:
         lm |= auth ? L2CAP_LM_AUTH : 0;
         lm |= encrypt ? L2CAP_LM_ENCRYPT : 0;
+<<<<<<< HEAD
+=======
+        lm |= (auth && encrypt) ? L2CAP_LM_SECURE : 0;
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
         if (!strcmp("true", value)) {
             ALOGI("Setting Master socket option");
             lm |= L2CAP_LM_MASTER;
@@ -244,7 +252,11 @@ static void initSocketNative(JNIEnv *env, jobject obj) {
 
 static void setAmpPolicyNative(JNIEnv *env, jobject obj, jint amppol) {
 #ifdef HAVE_BLUETOOTH
+<<<<<<< HEAD
     ALOGV(__FUNCTION__);
+=======
+    ALOGV("%s", __FUNCTION__);
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 
     struct asocket *s = get_socketData(env, obj);
 
@@ -266,7 +278,11 @@ static void setAmpPolicyNative(JNIEnv *env, jobject obj, jint amppol) {
 
 static int getMtuNative(JNIEnv *env, jobject obj) {
 #ifdef HAVE_BLUETOOTH
+<<<<<<< HEAD
     ALOGV(__FUNCTION__);
+=======
+    ALOGV("%s", __FUNCTION__);
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 
     jint type = env->GetIntField(obj, field_mType);
     struct asocket *s = get_socketData(env, obj);

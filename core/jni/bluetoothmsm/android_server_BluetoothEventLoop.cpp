@@ -265,8 +265,14 @@ static void initializeNativeDataNative(JNIEnv* env, jobject object) {
         if (dbus_error_is_set(&err)) {
             ALOGE("%s: Could not get onto the system bus!", __FUNCTION__);
             dbus_error_free(&err);
+<<<<<<< HEAD
         }
     dbus_bus_request_name(nat->conn, FRAMEWORKS_BASE_IFC,
+=======
+            return;
+        }
+        dbus_bus_request_name(nat->conn, FRAMEWORKS_BASE_IFC,
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
                     DBUS_NAME_FLAG_DO_NOT_QUEUE, &err);
         if (dbus_error_is_set(&err)) {
             ALOGE("%s: Could not get requested name", __FUNCTION__);
@@ -2323,7 +2329,11 @@ void onInputDeviceConnectionResult(DBusMessage *msg, void *user, void *n) {
 }
 
 void onDiscoverCharacteristicsResult(DBusMessage *msg, void *user, void *n) {
+<<<<<<< HEAD
     ALOGV(__FUNCTION__);
+=======
+    ALOGV("%s", __FUNCTION__);
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 
     native_data_t *nat = (native_data_t *)n;
     const char *path = (const char *)user;
@@ -2480,7 +2490,11 @@ void onIndicateResponse(DBusMessage *msg, void *user, void *n) {
 }
 
 void onUpdateCharacteristicValueResult(DBusMessage *msg, void *user, void *n) {
+<<<<<<< HEAD
     ALOGV(__FUNCTION__);
+=======
+    ALOGV("%s", __FUNCTION__);
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 
     native_data_t *nat = (native_data_t *)n;
     const char *path = (const char *)user;

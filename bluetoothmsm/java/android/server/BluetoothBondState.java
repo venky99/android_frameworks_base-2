@@ -1,5 +1,9 @@
 /*
  * Copyright (C) 2010 The Android Open Source Project
+<<<<<<< HEAD
+=======
+ * Copyright (C) 2013 Linux Foundation. All rights reserved.
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,6 +139,13 @@ class BluetoothBondState {
             }
             String pairState = mService.getUpdatedRemoteDeviceProperty(address, "Paired");
             Log.d(TAG, "The paired state of the remote device is " + pairState);
+<<<<<<< HEAD
+=======
+            if (pairState == null) {
+                Log.e(TAG, "error! pairState is null");
+                continue;
+            }
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
             if(pairState.equals("true")) {
                 Log.d(TAG, "The paired state of the remote device is true");
                 mState.put(address.toUpperCase(), BluetoothDevice.BOND_BONDED);

@@ -16,9 +16,12 @@
 
 package android.bluetooth;
 
+<<<<<<< HEAD
 import android.os.IBinder;
 import android.os.ServiceManager;
 import android.os.INetworkManagementService;
+=======
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfoInternal;
@@ -31,11 +34,14 @@ import android.net.NetworkUtils;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+<<<<<<< HEAD
 import java.net.InterfaceAddress;
 import android.net.LinkAddress;
 import android.net.RouteInfo;
 import java.net.Inet4Address;
 import android.os.SystemProperties;
+=======
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,8 +57,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BluetoothTetheringDataTracker implements NetworkStateTracker {
     private static final String NETWORKTYPE = "BLUETOOTH_TETHER";
     private static final String TAG = "BluetoothTethering";
+<<<<<<< HEAD
     private static final boolean DBG = true;
     private static final boolean VDBG = false;
+=======
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 
     private AtomicBoolean mTeardownRequested = new AtomicBoolean(false);
     private AtomicBoolean mPrivateDnsRouteSet = new AtomicBoolean(false);
@@ -64,8 +73,14 @@ public class BluetoothTetheringDataTracker implements NetworkStateTracker {
     private NetworkInfo mNetworkInfo;
 
     private BluetoothPan mBluetoothPan;
+<<<<<<< HEAD
     private static String mIface;
     private Thread mDhcpThread;
+=======
+    private BluetoothDevice mDevice;
+    private static String mIface;
+
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
     /* For sending events to connectivity service handler */
     private Handler mCsHandler;
     private Context mContext;
@@ -101,10 +116,15 @@ public class BluetoothTetheringDataTracker implements NetworkStateTracker {
      * Begin monitoring connectivity
      */
     public void startMonitoring(Context context, Handler target) {
+<<<<<<< HEAD
         if (DBG) Log.d(TAG, "startMonitoring: target: " + target);
         mContext = context;
         mCsHandler = target;
         if (VDBG) Log.d(TAG, "startMonitoring: mCsHandler: " + mCsHandler);
+=======
+        mContext = context;
+        mCsHandler = target;
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if (adapter != null) {
             adapter.getProfileProxy(mContext, mProfileServiceListener, BluetoothProfile.PAN);
@@ -137,7 +157,11 @@ public class BluetoothTetheringDataTracker implements NetworkStateTracker {
 
     @Override
     public void captivePortalCheckComplete() {
+<<<<<<< HEAD
         // not implemented
+=======
+        // Not implemented
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
     }
 
     /**
@@ -275,6 +299,7 @@ public class BluetoothTetheringDataTracker implements NetworkStateTracker {
         return "net.tcp.buffersize.wifi";
     }
 
+<<<<<<< HEAD
     private static short countPrefixLength(byte [] mask) {
         short count = 0;
         for (byte b : mask) {
@@ -360,6 +385,54 @@ public class BluetoothTetheringDataTracker implements NetworkStateTracker {
             mDhcpThread.interrupt();
             try { mDhcpThread.join(); } catch (InterruptedException ie) { return; }
         }
+=======
+
+    public synchronized void startReverseTether(String iface) {
+        // Dummy function for Bluedroid dependent common code compilation
+        Log.e(TAG, "ERROR : Not expected to be called");
+    }
+
+    public synchronized void startReverseTether(String iface, BluetoothDevice device) {
+        mIface = iface;
+        mDevice = device;
+        Thread dhcpThread = new Thread(new Runnable() {
+            public void run() {
+                //TODO(): Add callbacks for failure and success case.
+                //Currently this thread runs independently.
+                DhcpInfoInternal dhcpInfoInternal = new DhcpInfoInternal();
+                if (!NetworkUtils.runDhcp(mIface, dhcpInfoInternal)) {
+                    Log.e(TAG, "DHCP request error:" + NetworkUtils.getDhcpError());
+                    return;
+                }
+                mLinkProperties = dhcpInfoInternal.makeLinkProperties();
+                mLinkProperties.setInterfaceName(mIface);
+
+                mNetworkInfo.setIsAvailable(true);
+                mNetworkInfo.setDetailedState(DetailedState.CONNECTED, null, null);
+
+                Message msg = mCsHandler.obtainMessage(EVENT_CONFIGURATION_CHANGED, mNetworkInfo);
+                msg.sendToTarget();
+
+                msg = mCsHandler.obtainMessage(EVENT_STATE_CHANGED, mNetworkInfo);
+                msg.sendToTarget();
+            }
+        });
+        dhcpThread.start();
+    }
+
+    public synchronized void stopReverseTether() {
+        // Dummy function for Bluedroid dependent common code compilation
+        Log.e(TAG, "ERROR : Not expected to be called");
+    }
+
+    public synchronized void stopReverseTether(String iface) {
+        if (iface == null) {
+            Log.e(TAG, "ERROR : iface is null");
+            return;
+        }
+        NetworkUtils.stopDhcp(iface);
+
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
         mLinkProperties.clear();
         mNetworkInfo.setIsAvailable(false);
         mNetworkInfo.setDetailedState(DetailedState.DISCONNECTED, null, null);

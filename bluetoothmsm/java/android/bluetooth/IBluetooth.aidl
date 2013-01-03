@@ -155,6 +155,7 @@ interface IBluetooth
      in int superVisionTimeout, in int minCeLen, in int maxCeLen, in int connTimeOut);
     boolean gattConnectCancel(in String address, in String path);
     String getGattServiceName(in String path);
+<<<<<<< HEAD
     boolean discoverCharacteristics(in String path);
     String getGattServiceProperty(in String path, in String property);
     String[] getCharacteristicProperties(in String path);
@@ -165,6 +166,19 @@ interface IBluetooth
     boolean deregisterCharacteristicsWatcher(in String path);
     boolean startRemoteGattService(in String path, IBluetoothGattService gattCallback);
     void closeRemoteGattService(in String path);
+=======
+    boolean discoverCharacteristics(in String path, in int serviceId);
+    String getGattServiceProperty(in String path, in String property);
+    String[] getCharacteristicProperties(in String path);
+    boolean setCharacteristicProperty(in String path, in String key, in byte[] value,
+        boolean reliable, in int serviceId);
+    boolean registerCharacteristicsWatcher(in String path, in IBluetoothGattService gattCallback,
+    in int serviceId);
+    boolean updateCharacteristicValue(in String path, in int serviceId);
+    boolean deregisterCharacteristicsWatcher(in String path, in int serviceId);
+    int startRemoteGattService(in String path, in IBluetoothGattService gattCallback);
+    void closeRemoteGattService(in String path, in int serviceId);
+>>>>>>> 4119f2f... frameworks: add support for bluez stack
 
     // GATT server APIs
     boolean registerGattAppConfiguration(in BluetoothGattAppConfiguration config,
