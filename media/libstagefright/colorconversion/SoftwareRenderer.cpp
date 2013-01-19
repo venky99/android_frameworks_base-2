@@ -30,6 +30,16 @@
 
 namespace android {
 
+#ifdef QCOM_HARDWARE
+static const int QOMX_COLOR_FormatYUV420PackedSemiPlanar64x32Tile2m8ka = 0x7FA30C03;
+static const int OMX_QCOM_COLOR_FormatYVU420SemiPlanar = 0x7FA30C00;
+#endif
+
+static int ALIGN(int x, int y) {
+    // y must be a power of 2.
+    return (x + y - 1) & ~(y - 1);
+}
+
 SoftwareRenderer::SoftwareRenderer(
         const sp<ANativeWindow> &nativeWindow, const sp<MetaData> &meta)
     : mConverter(NULL),
@@ -69,6 +79,16 @@ SoftwareRenderer::SoftwareRenderer(
             halFormat = HAL_PIXEL_FORMAT_YV12;
             bufWidth = (mCropWidth + 1) & ~1;
             bufHeight = (mCropHeight + 1) & ~1;
+            break;
+        }
+#endif
+#ifdef QCOM_LEGACY_OMX
+        case OMX_QCOM_COLOR_FormatYVU420SemiPlanar:
+        {
+            halFormat = HAL_PIXEL_FORMAT_YCrCb_420_SP;
+            bufWidth = ALIGN(mCropWidth, 16);
+            bufHeight = ALIGN(mCropHeight, 2);
+            mAlign = ALIGN(mWidth, 16) * ALIGN(mHeight, 16);
             break;
         }
 #endif
@@ -125,11 +145,6 @@ SoftwareRenderer::SoftwareRenderer(
 SoftwareRenderer::~SoftwareRenderer() {
     delete mConverter;
     mConverter = NULL;
-}
-
-static int ALIGN(int x, int y) {
-    // y must be a power of 2.
-    return (x + y - 1) & ~(y - 1);
 }
 
 void SoftwareRenderer::render(
@@ -200,6 +215,33 @@ void SoftwareRenderer::render(
             dst_u += dst_c_stride;
             dst_v += dst_c_stride;
         }
+
+#ifdef QCOM_LEGACY_OMX
+    } else if (mColorFormat == OMX_QCOM_COLOR_FormatYVU420SemiPlanar) {
+        // Legacy Qualcomm color format
+
+        uint8_t *src_y = (uint8_t *)data;
+        uint8_t *src_u = src_y + mAlign;
+        uint8_t *dst_y = (uint8_t *)dst;
+        uint8_t *dst_u = dst_y + buf->stride * buf->height;
+        size_t bufsz = ALIGN(mCropWidth, 16) * ALIGN(mCropHeight, 2);
+
+        // Legacy codec doesn't return crop params. Ignore it for speedup :)
+        memcpy(dst_y, src_y, bufsz);
+        memcpy(dst_u, src_u, bufsz / 2);
+
+        /*for(size_t y = 0; y < mCropHeight; ++y) {
+            memcpy(dst_y, src_y, mCropWidth);
+            dst_y += buf->stride;
+            src_y += mWidth;
+
+            if(y & 1) {
+                memcpy(dst_u, src_u, mCropWidth);
+                dst_u += buf->stride;
+                src_u += mWidth;
+            }
+        }*/
+#endif
     } else {
         CHECK_EQ(mColorFormat, OMX_TI_COLOR_FormatYUV420PackedSemiPlanar);
 
