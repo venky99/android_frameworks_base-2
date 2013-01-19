@@ -1018,15 +1018,9 @@ public class NetworkManagementService extends INetworkManagementService.Stub
             WifiConfiguration wifiConfig, String softapIface) {
         mContext.enforceCallingOrSelfPermission(CONNECTIVITY_INTERNAL, TAG);
         try {
-            Resources resources = mContext.getResources();
-            if (resources.getBoolean(
+            if (mContext.getResources().getBoolean(
                         com.android.internal.R.bool.config_wifiApFirmwareReload)) {
-                wifiFirmwareReload(softapIface, "AP");
-            }
-
-            if (resources.getBoolean(
-                        com.android.internal.R.bool.config_wifiApStartInterface)) {
-                mConnector.execute("softap", "start", softapIface);
+                wifiFirmwareReload(wlanIface, "AP");
             }
             if (wifiConfig == null) {
                 mConnector.execute("softap", "set", softapIface);
