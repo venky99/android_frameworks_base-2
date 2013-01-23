@@ -213,11 +213,7 @@ public class UsbDeviceManager {
                 massStorageSupported = false;
         }
 
-        if ("mtp,adb".equals(SystemProperties.get("persist.sys.usb.config"))) {
-            mUseUsbNotification = true;
-        } else {
-            mUseUsbNotification = !massStorageSupported;
-        }
+        mUseUsbNotification = !massStorageSupported;
 
         // make sure the ADB_ENABLED setting value matches the current state
         Settings.Global.putInt(mContentResolver, Settings.Global.ADB_ENABLED, mAdbEnabled ? 1 : 0);
