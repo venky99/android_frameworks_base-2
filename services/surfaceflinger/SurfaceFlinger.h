@@ -440,7 +440,8 @@ private:
    // only written in the main thread, only read in other threads
    volatile     int32_t                     mSecureFrameBuffer;
 
-                bool                        mUseDithering;
+                int                         mUseDithering;
+                bool                        mPrefer16bpp;
 };
 
 // ---------------------------------------------------------------------------
