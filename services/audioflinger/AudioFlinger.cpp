@@ -2770,6 +2770,9 @@ void AudioFlinger::MixerThread::deleteTrackName_l(int name)
 bool AudioFlinger::MixerThread::checkForNewParameters_l()
 {
     bool reconfig = false;
+#ifdef STE_HARDWARE
+    bool updateLatency = false;
+#endif
 
     while (!mNewParameters.isEmpty()) {
         status_t status = NO_ERROR;
@@ -2833,6 +2836,11 @@ bool AudioFlinger::MixerThread::checkForNewParameters_l()
                 mEffectChains[i]->setDevice_l(mDevice);
             }
         }
+#ifdef STE_HARDWARE
+        if (param.getInt(String8(AudioParameter::keyLatency), value) == NO_ERROR) {
+            updateLatency = true;
+        }
+#endif
 
         if (status == NO_ERROR) {
             status = mOutput->stream->common.set_parameters(&mOutput->stream->common,
@@ -2859,6 +2867,11 @@ bool AudioFlinger::MixerThread::checkForNewParameters_l()
                 }
                 sendConfigEvent_l(AudioSystem::OUTPUT_CONFIG_CHANGED);
             }
+#ifdef STE_HARDWARE
+            if (status == NO_ERROR && updateLatency) {
+                sendConfigEvent_l(AudioSystem::OUTPUT_CONFIG_CHANGED);
+            }
+#endif
         }
 
         mNewParameters.removeAt(0);

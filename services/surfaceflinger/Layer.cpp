@@ -182,11 +182,17 @@ status_t Layer::setBuffers( uint32_t w, uint32_t h,
     mSurfaceTexture->setDefaultBufferSize(w, h);
     mSurfaceTexture->setDefaultBufferFormat(format);
 
-    if (mFlinger->getUseDithering()) {
-        // we use the red index
-        int displayRedSize = displayInfo.getSize(PixelFormatInfo::INDEX_RED);
-        int layerRedsize = info.getSize(PixelFormatInfo::INDEX_RED);
-        mNeedsDithering = layerRedsize > displayRedSize;
+    int useDither = mFlinger->getUseDithering();
+    if (useDither) {
+        if (useDither == 2) {
+            mNeedsDithering = true;
+        }
+        else {
+            // we use the red index
+            int displayRedSize = displayInfo.getSize(PixelFormatInfo::INDEX_RED);
+            int layerRedsize = info.getSize(PixelFormatInfo::INDEX_RED);
+            mNeedsDithering = (layerRedsize > displayRedSize);
+        }
     } else {
         mNeedsDithering = false;
     }
@@ -289,6 +295,18 @@ void Layer::setPerFrameData(hwc_layer_t* hwcl) {
 
 void Layer::onDraw(const Region& clip) const
 {
+#ifdef STE_HARDWARE
+    // Convert the texture to a native format if need be.
+    // convert() returns immediately if no conversion is necessary.
+    if (mSurfaceTexture != NULL) {
+        status_t res = mSurfaceTexture->convert();
+        if (res != NO_ERROR) {
+            LOGE("Layer::onDraw: texture conversion failed. "
+                "Texture content for this layer will not be initialized.");
+        }
+    }
+#endif
+
     if (CC_UNLIKELY(mActiveBuffer == 0)) {
         // the texture has not been created yet, this Layer has
         // in fact never been drawn into. This happens frequently with
@@ -514,7 +532,11 @@ void Layer::lockPageFlip(bool& recomputeVisibleRegions)
 
         if (mSurfaceTexture->updateTexImage(isComposition) < NO_ERROR) {
 #else
+#ifndef STE_HARDWARE
         if (mSurfaceTexture->updateTexImage() < NO_ERROR) {
+#else
+        if (mSurfaceTexture->updateTexImage(true) < NO_ERROR) {
+#endif
 #endif
             // something happened!
             recomputeVisibleRegions = true;

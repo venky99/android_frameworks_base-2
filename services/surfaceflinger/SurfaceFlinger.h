@@ -186,6 +186,10 @@ public:
     //HDMI Specific
     virtual void                        enableExternalDisplay(int disp_type, int externaltype);
 #endif
+#ifdef STE_HDMI
+    //HDMI Specific
+    virtual int                         setHDMIParameter(int disp_type, int externaltype);
+#endif
 
     virtual status_t captureScreen(DisplayID dpy,
             sp<IMemoryHeap>* heap,
@@ -219,6 +223,7 @@ public:
 
     GLuint getProtectedTexName() const { return mProtectedTexName; }
 
+    // 0: surface doesn't need dithering, 1: use if necessary, 2: use permanently
     inline int  getUseDithering() const { return mUseDithering; }
 
 

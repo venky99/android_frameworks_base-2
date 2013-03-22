@@ -28,6 +28,10 @@
 #include <ui/GraphicBufferMapper.h>
 #include <gui/ISurfaceTexture.h>
 
+#ifdef QCOM_LEGACY_OMX
+#include <gralloc_priv.h>
+#endif
+
 namespace android {
 
 #ifdef QCOM_HARDWARE
@@ -104,6 +108,10 @@ SoftwareRenderer::SoftwareRenderer(
             break;
     }
 
+    LOGI("Buffer color format: 0x%X", mColorFormat);
+    LOGI("Video params: mWidth: %d, mHeight: %d, mCropWidth: %d, mCropHeight: %d, mCropTop: %d, mCropLeft: %d",
+         mWidth, mHeight, mCropWidth, mCropHeight, mCropTop, mCropLeft);
+
     CHECK(mNativeWindow != NULL);
     CHECK(mCropWidth > 0);
     CHECK(mCropHeight > 0);
@@ -113,7 +121,11 @@ SoftwareRenderer::SoftwareRenderer(
             native_window_set_usage(
             mNativeWindow.get(),
             GRALLOC_USAGE_SW_READ_NEVER | GRALLOC_USAGE_SW_WRITE_OFTEN
-            | GRALLOC_USAGE_HW_TEXTURE | GRALLOC_USAGE_EXTERNAL_DISP));
+            | GRALLOC_USAGE_HW_TEXTURE | GRALLOC_USAGE_EXTERNAL_DISP
+#ifdef QCOM_LEGACY_OMX
+            | GRALLOC_USAGE_PRIVATE_ADSP_HEAP | GRALLOC_USAGE_PRIVATE_UNCACHED
+#endif
+            ));
 
     CHECK_EQ(0,
             native_window_set_scaling_mode(
@@ -215,7 +227,6 @@ void SoftwareRenderer::render(
             dst_u += dst_c_stride;
             dst_v += dst_c_stride;
         }
-
 #ifdef QCOM_LEGACY_OMX
     } else if (mColorFormat == OMX_QCOM_COLOR_FormatYVU420SemiPlanar) {
         // Legacy Qualcomm color format

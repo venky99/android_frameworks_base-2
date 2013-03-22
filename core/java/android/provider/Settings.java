@@ -55,6 +55,11 @@ public final class Settings {
 
     // Intent actions for Settings
 
+    /**
+    * Option to change statusbar transparency
+    * @hide
+    */
+    public static final String STATUSBAR_TRANSPARENCY = "statusbar_transparency";
 
    /**
     * Intent actions for Settings
@@ -1120,6 +1125,18 @@ public final class Settings {
          */
         public static final Uri CONTENT_URI =
             Uri.parse("content://" + AUTHORITY + "/system");
+
+         /**
+         * Enable/disable screenshot sound
+         * @hide
+         */
+        public static final String SCREENSHOT_SOUND = "screenshot_sound";
+
+        /**
+         * Screenshot delay
+         * @hide
+         */
+        public static final String SCREENSHOT_DELAY = "screenshot_delay";
 
         /**
          * Whether we keep the device on while the device is plugged in.
@@ -2343,7 +2360,9 @@ public final class Settings {
          * Display style of the status bar battery information
          * 0: Display the stock battery information
          * 1: Display cm battery percentage implementation / dont show stock icon
-         * 2: Hide the battery information
+         * 2: Display cm circle battery implementation without percentage
+         * 3: Display cm circle battery implementation with percentage
+         * 4: Hide the battery information
          * default: 0
          * @hide
          */
@@ -2358,6 +2377,12 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_CLOCK = "status_bar_clock";
+
+        /**
+         * Whether to show centerclock in the status bar
+         * @hide
+         */
+        public static final String STATUS_BAR_CENTERCLOCK = "status_bar_centerclock";
 
         /**
          * Whether to show the signal text or signal bars.
@@ -2381,6 +2406,13 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_IME_SWITCHER = "status_bar_ime_switcher";
+
+        /**
+         * Whether to place the status bar at the bottom of the screen
+         * @hide
+         */
+
+        public static final String STATUS_BAR_BOTTOM = "status_bar_bottom";
 
         /**
          * Whether to use a separate delay for "slide to unlock" and security
@@ -2583,6 +2615,12 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
+
+         /**
+         * Add option to display the navigation bar
+         * @hide
+         */
+        public static final String SHOW_NAVBAR = "show_navbar";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings

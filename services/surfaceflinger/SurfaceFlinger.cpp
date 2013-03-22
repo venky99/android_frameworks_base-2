@@ -135,8 +135,8 @@ void SurfaceFlinger::init()
     property_get("debug.sf.ddms", value, "0");
     mDebugDDMS = atoi(value);
 
-    property_get("persist.sys.use_dithering", value, "0");
-    mUseDithering = atoi(value) == 1;
+    property_get("persist.sys.use_dithering", value, "1");
+    mUseDithering = atoi(value);
 
     property_get("persist.sys.prefer_16bpp", value, "1");
     mPrefer16bpp = atoi(value);
@@ -287,7 +287,12 @@ status_t SurfaceFlinger::readyToRun()
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnable(GL_SCISSOR_TEST);
     glShadeModel(GL_FLAT);
-    glDisable(GL_DITHER);
+    if (mUseDithering == 0 || mUseDithering == 1) {
+        glDisable(GL_DITHER);
+    }
+    else if (mUseDithering == 2) {
+        glEnable(GL_DITHER);
+    }
     glDisable(GL_CULL_FACE);
 
     const uint16_t g0 = pack565(0x0F,0x1F,0x0F);
@@ -480,7 +485,9 @@ bool SurfaceFlinger::threadLoop()
 #else
 	// inform the h/w that we're done compositing
 	logger.log(GraphicLog::SF_COMPOSITION_COMPLETE, index);
+#ifndef STE_HARDWARE
 	hw.compositionComplete();
+#endif
 
 	logger.log(GraphicLog::SF_SWAP_BUFFERS, index);
 	postFramebuffer();
@@ -489,7 +496,9 @@ bool SurfaceFlinger::threadLoop()
         logger.log(GraphicLog::SF_REPAINT_DONE, index);
     } else {
         // pretend we did the post
+#ifndef STE_HARDWARE
         hw.compositionComplete();
+#endif
         usleep(16667); // 60 fps period
 
 #ifdef QCOM_HARDWARE
@@ -578,7 +587,6 @@ void SurfaceFlinger::handleTransactionLocked(uint32_t transactionFlags)
 {
     const LayerVector& currentLayers(mCurrentState.layersSortedByZ);
     const size_t count = currentLayers.size();
-
     /*
      * Traversal of the children
      * (perform the transaction for each of them if needed)
@@ -888,8 +896,10 @@ void SurfaceFlinger::handleRepaint()
 
     // set the frame buffer
     const DisplayHardware& hw(graphicPlane(0).displayHardware());
+#ifndef STE_HARDWARE
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+#endif
 
     uint32_t flags = hw.getFlags();
     if ((flags & DisplayHardware::SWAP_RECTANGLE) ||
@@ -958,8 +968,15 @@ bool SurfaceFlinger::isGPULayerPresent()
 }
 #endif
 
+#ifdef STE_HARDWARE
+static bool checkDrawingWithGL(hwc_layer_t* const layers, size_t layerCount);
+#endif
+
 void SurfaceFlinger::setupHardwareComposer(Region& dirtyInOut)
 {
+#ifdef STE_HARDWARE
+    bool useGL = true;
+#endif
     const DisplayHardware& hw(graphicPlane(0).displayHardware());
     HWComposer& hwc(hw.getHwComposer());
     hwc_layer_t* const cur(hwc.getLayers());
@@ -993,6 +1010,23 @@ void SurfaceFlinger::setupHardwareComposer(Region& dirtyInOut)
 
 #ifdef QCOM_HARDWARE
     mCanSkipComposition = (hwc.getFlags() & HWC_SKIP_COMPOSITION) ? true : false;
+#endif
+#ifdef STE_HARDWARE
+    /*
+     * Check if GL will be used
+     */
+    useGL = checkDrawingWithGL(cur, count);
+
+    if (!useGL) {
+        return;
+    }
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    if (UNLIKELY(!mWormholeRegion.isEmpty())) {
+        // should never happen unless the window manager has a bug
+        // draw something...
+        drawWormhole();
+    }
 #endif
     if (err == NO_ERROR) {
         // what's happening here is tricky.
@@ -1076,12 +1110,28 @@ void SurfaceFlinger::setupHardwareComposer(Region& dirtyInOut)
     }
 }
 
+#ifdef STE_HARDWARE
+static bool checkDrawingWithGL(hwc_layer_t* const layers, size_t layerCount)
+{
+    bool useGL = false;
+    if (layers) {
+        for (size_t i=0 ; i<layerCount ; i++) {
+            if (layers[i].compositionType == HWC_FRAMEBUFFER) {
+                useGL = true;
+            }
+        }
+    }
+    return useGL;
+}
+#endif
+
 void SurfaceFlinger::composeSurfaces(const Region& dirty)
 {
     const DisplayHardware& hw(graphicPlane(0).displayHardware());
     HWComposer& hwc(hw.getHwComposer());
 
     const size_t fbLayerCount = hwc.getLayerCount(HWC_FRAMEBUFFER);
+#ifndef STE_HARDWARE
     if (UNLIKELY(fbLayerCount && !mWormholeRegion.isEmpty())) {
         // should never happen unless the window manager has a bug
         // draw something...
@@ -1102,6 +1152,7 @@ void SurfaceFlinger::composeSurfaces(const Region& dirty)
         drawWormhole();
 #endif
     }
+#endif
 
     /*
      * and then, render the layers targeted at the framebuffer
@@ -1429,6 +1480,14 @@ void SurfaceFlinger::enableExternalDisplay(int disp_type, int value)
         updateHwcExternalDisplay(mExtDispOutput);
         signalEvent();
     }
+}
+#endif
+
+#ifdef STE_HDMI
+int SurfaceFlinger::setHDMIParameter(int disp_type, int value)
+{
+    HWComposer &hwc(graphicPlane(0).displayHardware().getHwComposer());
+    return hwc.setHDMIParameter(disp_type,value);
 }
 #endif
 
@@ -2548,7 +2607,9 @@ status_t SurfaceFlinger::captureScreenImplLocked(DisplayID dpy,
     glDeleteRenderbuffersOES(1, &tname);
     glDeleteFramebuffersOES(1, &name);
 
+#ifdef STE_HARDWARE
     hw.compositionComplete();
+#endif
 
     // LOGD("screenshot: result = %s", result<0 ? strerror(result) : "OK");
 
@@ -2776,9 +2837,15 @@ sp<GraphicBuffer> GraphicBufferAlloc::createGraphicBuffer(uint32_t w, uint32_t h
         if (err == NO_MEMORY) {
             GraphicBuffer::dumpAllocationsToSystemLog();
         }
+#ifndef STE_HARDWARE
         LOGE("GraphicBufferAlloc::createGraphicBuffer(w=%d, h=%d) "
              "failed (%s), handle=%p",
                 w, h, strerror(-err), graphicBuffer->handle);
+#else
+        LOGE("GraphicBufferAlloc::createGraphicBuffer(w=%d, h=%d, format=%#x) "
+             "failed (%s), handle=%p",
+                w, h, format, strerror(-err), graphicBuffer->handle);
+#endif
         return 0;
     }
 #ifdef QCOM_HARDWARE
