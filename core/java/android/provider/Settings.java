@@ -2265,11 +2265,14 @@ public final class Settings {
         public static final String SIP_ASK_ME_EACH_TIME = "SIP_ASK_ME_EACH_TIME";
 
         /**
-         * Pointer speed setting.
-         * This is an integer value in a range between -7 and +7, so there are 15 possible values.
-         *   -7 = slowest
-         *    0 = default speed
-         *   +7 = fastest
+         * Whether or not to launch default music player when headset is connected
+         * @hide
+         */
+        public static final String HEADSET_CONNECT_PLAYER = "headset_connect_player";
+
+
+        /**
+         * Whether national data roaming should be used.
          * @hide
          */
         public static final String POINTER_SPEED = "pointer_speed";
