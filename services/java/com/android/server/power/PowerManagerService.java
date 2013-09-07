@@ -1300,24 +1300,16 @@ public final class PowerManagerService extends IPowerManager.Stub
                     nextTimeout = mLastUserActivityTime
                             + screenOffTimeout - screenDimDuration;
                     if (now < nextTimeout) {
-                        int brightness = mButtonBrightnessOverrideFromWindowManager >= 0
-                                ? mButtonBrightnessOverrideFromWindowManager
-                                : mDisplayPowerRequest.screenBrightness;
-                        mKeyboardLight.setBrightness(mKeyboardVisible ? brightness : 0);
                         if (now > mLastUserActivityTime + BUTTON_ON_DURATION) {
-                            // do nothing
+                            mButtonsLight.setBrightness(0);
                         } else {
-                            mButtonsLight.setBrightness(brightness);
-                            if (brightness != 0) {
-                                nextTimeout = now + BUTTON_ON_DURATION;
-                            }
+                            mButtonsLight.setBrightness(mDisplayPowerRequest.screenBrightness);
+                            nextTimeout = now + BUTTON_ON_DURATION;
                         }
                         mUserActivitySummary |= USER_ACTIVITY_SCREEN_BRIGHT;
                     } else {
                         nextTimeout = mLastUserActivityTime + screenOffTimeout;
                         if (now < nextTimeout) {
-                            mButtonsLight.setBrightness(0);
-                            mKeyboardLight.setBrightness(0);
                             mUserActivitySummary |= USER_ACTIVITY_SCREEN_DIM;
                         }
                     }
