@@ -1828,18 +1828,6 @@
 
   <!-- Hardware Rotation Lock -->
   <java-symbol type="bool" name="config_forceDisableHardwareKeyboard" />
-  <java-symbol type="bool" name="config_hasRotationLockSwitch" />
-
-  <!-- Always show battery status on lockscreen -->
-  <java-symbol type="string" name="lockscreen_always_battery" />
-  <java-symbol type="string" name="lockscreen_always_low_battery" />
-
-  <!-- Hide Navbar -->
-  <java-symbol type="layout" name="global_actions_navbar_mode" />
-  <java-symbol type="id" name="navbartoggle" />
-  <java-symbol type="id" name="navbarhome" />
-  <java-symbol type="id" name="navbarback" />
-  <java-symbol type="id" name="navbarmenu" />
 
   <!-- Telephony -->
   <java-symbol type="bool" name="config_smsSamsungCdmaAlternateMessageIDEncoding" />
@@ -1849,12 +1837,8 @@
   <!-- Power Menu -->
   <java-symbol type="drawable" name="ic_lock_screenshot" />
   <java-symbol type="string" name="global_action_screenshot" />
-  <java-symbol type="drawable" name="ic_lock_torch" />
-  <java-symbol type="string" name="global_action_torch" />
 
   <!-- HW rotation lock -->
-  <java-symbol type="string" name="toast_rotation_unlocked" />
-  <java-symbol type="string" name="toast_rotation_locked" />
   <java-symbol type="bool" name="config_noDelayInATwoDP" />
 
   <!-- Wifi -->
