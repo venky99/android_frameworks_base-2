@@ -3560,12 +3560,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 }
                                 if (isScreenOn || !mVolumeWakeScreen) {
                     break;
-                } else if (keyguardActive) {
-                    keyCode = KeyEvent.KEYCODE_POWER;
-                    mKeyguardMediator.onWakeKeyWhenKeyguardShowingTq(keyCode);
-                } else {
-                    result |= ACTION_WAKE_UP;
-                    break;
                 }
             }
 
