@@ -1224,6 +1224,8 @@ package android {
     field public static final int dialog_min_width_minor = 17104900; // 0x1050004
     field public static final int notification_large_icon_height = 17104902; // 0x1050006
     field public static final int notification_large_icon_width = 17104901; // 0x1050005
+    field public static final int semc_cornerbutton_fixedpady = 17104907; // 0x105000b
+    field public static final int semc_text_size_extra_large = 17104908; // 0x105000c
     field public static final int thumbnail_height = 17104897; // 0x1050001
     field public static final int thumbnail_width = 17104898; // 0x1050002
   }
@@ -1360,6 +1362,10 @@ package android {
     field public static final int screen_background_dark_transparent = 17301673; // 0x10800a9
     field public static final int screen_background_light = 17301657; // 0x1080099
     field public static final int screen_background_light_transparent = 17301674; // 0x10800aa
+    field public static final int semc_button_corner_bottomleft = 17301662; // 0x108009e
+    field public static final int semc_button_corner_bottomright = 17301663; // 0x108009f
+    field public static final int semc_button_corner_topleft = 17301664; // 0x10800a0
+    field public static final int semc_button_corner_topright = 17301665; // 0x10800a1
     field public static final int spinner_background = 17301616; // 0x1080070
     field public static final int spinner_dropdown_background = 17301617; // 0x1080071
     field public static final int star_big_off = 17301619; // 0x1080073
@@ -10846,6 +10852,7 @@ package android.media {
     method public boolean isBluetoothScoOn();
     method public boolean isMicrophoneMute();
     method public boolean isMusicActive();
+    method public boolean isSpeakerMediaOn();
     method public boolean isSpeakerphoneOn();
     method public deprecated boolean isWiredHeadsetOn();
     method public void loadSoundEffects();
@@ -10861,6 +10868,7 @@ package android.media {
     method public void setParameters(java.lang.String);
     method public void setRingerMode(int);
     method public deprecated void setRouting(int, int, int);
+    method public void setSpeakerMediaOn(boolean);
     method public void setSpeakerphoneOn(boolean);
     method public void setStreamMute(int, boolean);
     method public void setStreamSolo(int, boolean);
@@ -20883,6 +20891,7 @@ package android.telephony {
     method public int getGsmBitErrorRate();
     method public int getGsmSignalStrength();
     method public boolean isGsm();
+    method public boolean needsOldRilFeature(java.lang.String);
     method public void writeToParcel(android.os.Parcel, int);
   }
 
@@ -25230,6 +25239,7 @@ package android.view {
     method public void setWillNotDraw(boolean);
     method public void setX(float);
     method public void setY(float);
+    method protected final boolean shouldMirror();
     method public boolean showContextMenu();
     method public android.view.ActionMode startActionMode(android.view.ActionMode.Callback);
     method public void startAnimation(android.view.animation.Animation);
@@ -25619,6 +25629,7 @@ package android.view {
     method public void setClipChildren(boolean);
     method public void setClipToPadding(boolean);
     method public void setDescendantFocusability(int);
+    method public void setDirectionality(int);
     method public void setLayoutAnimation(android.view.animation.LayoutAnimationController);
     method public void setLayoutAnimationListener(android.view.animation.Animation.AnimationListener);
     method public void setLayoutTransition(android.animation.LayoutTransition);
@@ -26010,6 +26021,7 @@ package android.view {
     field public static final deprecated int MEMORY_TYPE_HARDWARE = 1; // 0x1
     field public static final deprecated int MEMORY_TYPE_NORMAL = 0; // 0x0
     field public static final deprecated int MEMORY_TYPE_PUSH_BUFFERS = 3; // 0x3
+    field public static final int PREVENT_POWER_KEY = -2147483648; // 0x80000000
     field public static final int SCREEN_BRIGHTNESS_CHANGED = 2048; // 0x800
     field public static final int SCREEN_ORIENTATION_CHANGED = 1024; // 0x400
     field public static final int SOFT_INPUT_ADJUST_NOTHING = 48; // 0x30
