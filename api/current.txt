@@ -9804,7 +9804,6 @@ package android.hardware {
     method public int getJpegQuality();
     method public int getJpegThumbnailQuality();
     method public android.hardware.Camera.Size getJpegThumbnailSize();
-    method public java.lang.String getPowerMode();
     method public int getMaxExposureCompensation();
     method public int getMaxNumDetectedFaces();
     method public int getMaxNumFocusAreas();
@@ -9814,6 +9813,7 @@ package android.hardware {
     method public int getMinExposureCompensation();
     method public int getPictureFormat();
     method public android.hardware.Camera.Size getPictureSize();
+    method public java.lang.String getPowerMode();
     method public android.hardware.Camera.Size getPreferredPreviewSizeForVideo();
     method public int getPreviewFormat();
     method public void getPreviewFpsRange(int[]);
@@ -20888,6 +20888,7 @@ package android.telephony {
     method public int getGsmBitErrorRate();
     method public int getGsmSignalStrength();
     method public boolean isGsm();
+    method public boolean needsOldRilFeature(java.lang.String);
     method public void writeToParcel(android.os.Parcel, int);
   }
 
@@ -26015,6 +26016,7 @@ package android.view {
     field public static final deprecated int MEMORY_TYPE_HARDWARE = 1; // 0x1
     field public static final deprecated int MEMORY_TYPE_NORMAL = 0; // 0x0
     field public static final deprecated int MEMORY_TYPE_PUSH_BUFFERS = 3; // 0x3
+    field public static final int PREVENT_POWER_KEY = -2147483648; // 0x80000000
     field public static final int SCREEN_BRIGHTNESS_CHANGED = 2048; // 0x800
     field public static final int SCREEN_ORIENTATION_CHANGED = 1024; // 0x400
     field public static final int SOFT_INPUT_ADJUST_NOTHING = 48; // 0x30
@@ -41334,8 +41336,8 @@ package java.util.zip {
 
   public class ZipFile {
     ctor public ZipFile(java.io.File) throws java.io.IOException, java.util.zip.ZipException;
-    ctor public ZipFile(java.lang.String) throws java.io.IOException;
     ctor public ZipFile(java.io.File, int) throws java.io.IOException;
+    ctor public ZipFile(java.lang.String) throws java.io.IOException;
     method public void close() throws java.io.IOException;
     method public java.util.Enumeration<? extends java.util.zip.ZipEntry> entries();
     method public java.util.zip.ZipEntry getEntry(java.lang.String);
