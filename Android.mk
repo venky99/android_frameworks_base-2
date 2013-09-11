@@ -37,11 +37,6 @@ FRAMEWORKS_BASE_JAVA_SRC_DIRS += \
 	$(addprefix frameworks/base/, bluetoothmsm/java)
 endif
 
-<<<<<<< HEAD
-# the library
-# ============================================================
-=======
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 include $(CLEAR_VARS)
 
 ifdef WIFI_AP_DRIVER_MODULE_PATH
