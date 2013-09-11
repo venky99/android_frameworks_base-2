@@ -4116,14 +4116,7 @@ public final class Settings {
         public static final String VOLUME_KEYS_CONTROL_RING_STREAM = "volume_keys_control_ring_stream";
 
         /**
-         * Whether or not to launch default music player when headset is connected
-         * @hide
-         */
-        public static final String HEADSET_CONNECT_PLAYER = "headset_connect_player";
-
-
-        /**
-         * Whether national data roaming should be used.
+         * Whether to wake the screen with the home key, the value is boolean.
          * @hide
          */
         public static final String BUTTON_WAKE_SCREEN = "button_wake_screen";
