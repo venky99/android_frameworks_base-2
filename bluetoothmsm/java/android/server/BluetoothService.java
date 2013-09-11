@@ -201,12 +201,7 @@ public class BluetoothService extends IBluetooth.Stub {
     private final ConcurrentHashMap<Integer, ServiceRecordClient> mServiceRecordToPid;
     private final HashMap<String, ArrayList<ParcelUuid>> mGattIntentTracker;
     private final HashMap<String, IBluetoothGattService> mGattServiceTracker;
-<<<<<<< HEAD
     private final HashMap<String, IBluetoothGattService> mGattWatcherTracker;
-=======
-    private final HashMap<String, HashMap<Integer, IBluetoothGattService>> mGattWatcherTracker;
-    private final HashMap<String, ArrayList<String>> mGattOperationTracker;
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
     private final SortedMap<String, Integer> mGattServices;
 
@@ -255,10 +250,6 @@ public class BluetoothService extends IBluetooth.Stub {
              "android.bluetooth.service.action.DISCOVERABLE_TIMEOUT";
 
     public IBluetoothPreferredDeviceListCallback sPListCallBack = null;
-<<<<<<< HEAD
-=======
-    public ArrayList<Integer> usedSrvIds = new ArrayList<Integer>();
->>>>>>> 4119f2f... frameworks: add support for bluez stack
     public String callerPreferredDevApi = null;
     public String callerIntent = null;
     public HashMap<BluetoothDevice, Integer> preferredDevicesList;
@@ -437,12 +428,7 @@ public class BluetoothService extends IBluetooth.Stub {
         mUuidCallbackTracker = new ConcurrentHashMap<RemoteService, IBluetoothCallback>();
         mGattIntentTracker = new HashMap<String, ArrayList<ParcelUuid>>();
         mGattServiceTracker = new HashMap<String, IBluetoothGattService>();
-<<<<<<< HEAD
         mGattWatcherTracker = new HashMap<String, IBluetoothGattService>();
-=======
-        mGattWatcherTracker = new HashMap<String, HashMap<Integer, IBluetoothGattService>>();
-        mGattOperationTracker = new HashMap<String, ArrayList<String>>();
->>>>>>> 4119f2f... frameworks: add support for bluez stack
         mGattServices = new TreeMap<String, Integer>();
         mDeviceProfileState = new HashMap<String, BluetoothDeviceProfileState>();
         mA2dpProfileState = new BluetoothProfileState(mContext, BluetoothProfileState.A2DP);
@@ -732,10 +718,6 @@ public class BluetoothService extends IBluetooth.Stub {
         mAdapterConnectionState = BluetoothAdapter.STATE_DISCONNECTED;
         mAdapterUuids = null;
         mAdapterSdpHandles = null;
-<<<<<<< HEAD
-=======
-        usedSrvIds.clear();
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         // Log bluetooth off to battery stats.
         long ident = Binder.clearCallingIdentity();
@@ -760,15 +742,8 @@ public class BluetoothService extends IBluetooth.Stub {
      */
     synchronized void shutoffBluetooth() {
         if (mAdapterSdpHandles != null) removeReservedServiceRecordsNative(mAdapterSdpHandles);
-<<<<<<< HEAD
         setBluetoothTetheringNative(false, BluetoothPanProfileHandler.NAP_ROLE,
                 BluetoothPanProfileHandler.NAP_BRIDGE);
-=======
-        if (SystemProperties.getBoolean("ro.qualcomm.bluetooth.nap", true)) {
-            setBluetoothTetheringNative(false, BluetoothPanProfileHandler.NAP_ROLE,
-                BluetoothPanProfileHandler.NAP_BRIDGE);
-        }
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         /*
          * disable QC based profiles
@@ -778,10 +753,6 @@ public class BluetoothService extends IBluetooth.Stub {
         disableSAP();
         disableMAP();
         tearDownNativeDataNative();
-<<<<<<< HEAD
-=======
-        usedSrvIds.clear();
->>>>>>> 4119f2f... frameworks: add support for bluez stack
     }
 
     /**
@@ -1102,21 +1073,13 @@ public class BluetoothService extends IBluetooth.Stub {
 
         if (R.getBoolean(com.android.internal.R.bool.config_voice_capable)) {
             uuids.add(BluetoothUuid.Handsfree_AG);
-<<<<<<< HEAD
             uuids.add(BluetoothUuid.PBAP_PSE);
-=======
-            if (SystemProperties.getBoolean("ro.qualcomm.bluetooth.pbap", true)) {
-                Log.i(TAG, "enabling PBAP services");
-                uuids.add(BluetoothUuid.PBAP_PSE);
-            }
->>>>>>> 4119f2f... frameworks: add support for bluez stack
         }
 
         // Add SDP records for profiles maintained by Android userspace
         addReservedSdpRecords(uuids);
 
         if (R.getBoolean(com.android.internal.R.bool.config_bluetooth_default_profiles)) {
-<<<<<<< HEAD
             // Enable profiles maintained by Bluez userspace.
             setBluetoothTetheringNative(true, BluetoothPanProfileHandler.NAP_ROLE,
                    BluetoothPanProfileHandler.NAP_BRIDGE);
@@ -1125,17 +1088,6 @@ public class BluetoothService extends IBluetooth.Stub {
             uuids.add(BluetoothUuid.AudioSource);
             uuids.add(BluetoothUuid.AvrcpTarget);
             uuids.add(BluetoothUuid.NAP);
-=======
-            if (SystemProperties.getBoolean("ro.qualcomm.bluetooth.nap", true)) {
-                setBluetoothTetheringNative(true, BluetoothPanProfileHandler.NAP_ROLE,
-                   BluetoothPanProfileHandler.NAP_BRIDGE);
-                Log.i(TAG, "enabling NAP services");
-                uuids.add(BluetoothUuid.NAP);
-            }
-            // Add SDP records for profiles maintained by Bluez userspace
-            uuids.add(BluetoothUuid.AudioSource);
-            uuids.add(BluetoothUuid.AvrcpTarget);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
         }
 
         // Cannot cast uuids.toArray directly since ParcelUuid is parcelable
@@ -2133,7 +2085,6 @@ public class BluetoothService extends IBluetooth.Stub {
     public synchronized boolean cancelBondProcess(String address) {
         mContext.enforceCallingOrSelfPermission(BLUETOOTH_ADMIN_PERM,
                                                 "Need BLUETOOTH_ADMIN permission");
-<<<<<<< HEAD
         if (!isEnabledInternal()) return false;
 
         if (!BluetoothAdapter.checkBluetoothAddress(address)) {
@@ -2147,35 +2098,6 @@ public class BluetoothService extends IBluetooth.Stub {
         mBondState.setBondState(address, BluetoothDevice.BOND_NONE,
                                 BluetoothDevice.UNBOND_REASON_AUTH_CANCELED);
         cancelDeviceCreationNative(address);
-=======
-
-        BluetoothClass btClass = new BluetoothClass(getRemoteClass(address));
-        int btDeviceClass = btClass.getDeviceClass();
-        String pairState = getUpdatedRemoteDeviceProperty(address, "Paired");
-
-        if (!isEnabledInternal()) return false;
-
-        if (!BluetoothAdapter.checkBluetoothAddress(address))
-            return false;
-
-        address = address.toUpperCase();
-
-        // HID PERIPHERAL_POINTING devices have BONDED state even if
-        // the pairing wasnt completed, So need to check pairState.
-        if ((btDeviceClass == BluetoothClass.Device.PERIPHERAL_POINTING) &&
-                       (mBondState.getBondState(address) == BluetoothDevice.BOND_BONDED)) {
-            if (pairState.equals("true"))
-                return false;
-        } else {
-            if (mBondState.getBondState(address) != BluetoothDevice.BOND_BONDING)
-                return false;
-        }
-
-        cancelDeviceCreationNative(address);
-
-        mBondState.setBondState(address, BluetoothDevice.BOND_NONE,
-                               BluetoothDevice.UNBOND_REASON_AUTH_CANCELED);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
         return true;
     }
 
@@ -4540,7 +4462,6 @@ public class BluetoothService extends IBluetooth.Stub {
     }
 
     /*package*/ synchronized void makeDiscoverCharacteristicsCallback(String servicePath,
-<<<<<<< HEAD
                  boolean result) {
         IBluetoothGattService callback = mGattServiceTracker.get(servicePath);
 
@@ -4562,49 +4483,6 @@ public class BluetoothService extends IBluetooth.Stub {
     }
 
     /*package*/ synchronized void makeSetCharacteristicPropertyCallback(String charPath, String property, boolean result) {
-=======
-                 String index, boolean result) {
-        Log.d(TAG, "makeDiscoverCharacteristicsCallback for service: " + servicePath);
-        Log.d(TAG, "makeDiscoverCharacteristicsCallback for index: " + index);
-
-        ArrayList<String> objPathSrvIdList = mGattOperationTracker.get("discoverChar");
-        if(objPathSrvIdList != null) {
-            Log.d(TAG, "objPathSrvIdList not null");
-            Log.d(TAG, "objPathSrvIdList length::"+objPathSrvIdList.size());
-            for(int i=0; i < objPathSrvIdList.size(); i++) {
-                String pathSrvId = objPathSrvIdList.get(i);
-                String[] arrStr = pathSrvId.split("#");
-                Log.d(TAG, "pathSrvId::"+pathSrvId);
-                //Get the callback only when the Arraylist's objPath matches with
-                //the servicePath in this function
-                if(arrStr[0] != null && arrStr[0].equalsIgnoreCase(servicePath)){
-                    Log.d(TAG, "The Arraylist's objPath matches with the servicePath in this functio"+
-                               "n");
-                    IBluetoothGattService callback = mGattServiceTracker.get(pathSrvId);
-                    if (callback != null) {
-                        Log.d(TAG, "CallBack retrieved");
-                        String[]  charPaths = null;
-                        if (result)
-                            charPaths = getCharacteristicsFromCache(servicePath);
-                        try {
-                            callback.onCharacteristicsDiscovered(charPaths, result);
-                            objPathSrvIdList.remove(i);
-                        } catch (Exception e) {
-                            Log.e(TAG, "", e);
-                            forceCloseGattService(servicePath, Integer.parseInt(index));
-                        }
-                    } else
-                        Log.d(TAG, "Discover Characteristics Callback for  service " + servicePath +
-" not queued");
-                }
-            }
-            mGattOperationTracker.put("discoverChar", objPathSrvIdList);
-        }
-    }
-
-    /*package*/ synchronized void makeSetCharacteristicPropertyCallback(
-        String charPath, String index, String property, boolean result) {
->>>>>>> 4119f2f... frameworks: add support for bluez stack
         Log.d(TAG, "makeSetCharacteristicPropertyCallback for char: " + charPath);
 
         if (charPath == null) {
@@ -4617,22 +4495,14 @@ public class BluetoothService extends IBluetooth.Stub {
             return;
         }
 
-<<<<<<< HEAD
         IBluetoothGattService callback = mGattServiceTracker.get(servicePath);
-=======
-        IBluetoothGattService callback = mGattServiceTracker.get(servicePath+"#"+index);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         if (callback != null) {
             try {
                 callback.onSetCharacteristicProperty(charPath, property, result);
             }  catch (Exception e) {
                 Log.e(TAG, "", e);
-<<<<<<< HEAD
                 forceCloseGattService(servicePath);
-=======
-                forceCloseGattService(servicePath, Integer.parseInt(index));
->>>>>>> 4119f2f... frameworks: add support for bluez stack
             }
 
         } else
@@ -4654,7 +4524,6 @@ public class BluetoothService extends IBluetooth.Stub {
 
         Log.d(TAG, "WatcherValueChanged : service Path = " + servicePath);
 
-<<<<<<< HEAD
         IBluetoothGattService callback = mGattWatcherTracker.get(servicePath);
 
         if (callback != null) {
@@ -4663,35 +4532,13 @@ public class BluetoothService extends IBluetooth.Stub {
             } catch (Exception e) {
                 Log.e(TAG, "", e);
                 forceCloseGattService(servicePath);
-=======
-        HashMap<Integer, IBluetoothGattService> callbacks = mGattWatcherTracker.get(servicePath);
-
-        if (callbacks != null) {
-            Log.d(TAG, "Watcher services exist for the path " + servicePath);
-            try {
-                for(Map.Entry<Integer, IBluetoothGattService> entry : callbacks.entrySet()) {
-                    IBluetoothGattService callback = entry.getValue();
-                    if(callback != null) {
-                        Log.d(TAG, "Calling on onValueChanged for : " + callback);
-                        callback.onValueChanged(charPath, value);
-                    }
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "", e);
-                forceCloseGattService(servicePath, -1);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
             }
         } else {
             Log.d(TAG, "Callback for service " + servicePath + " not registered");
         }
     }
 
-<<<<<<< HEAD
     /*package*/ synchronized void makeUpdateCharacteristicValueCallback(String charPath, boolean result) {
-=======
-    /*package*/ synchronized void makeUpdateCharacteristicValueCallback(
-        String charPath, String index, boolean result) {
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         String servicePath = charPath.substring(0, charPath.indexOf("/characteristic"));
 
@@ -4699,11 +4546,7 @@ public class BluetoothService extends IBluetooth.Stub {
             return;
         }
 
-<<<<<<< HEAD
         IBluetoothGattService callback = mGattServiceTracker.get(servicePath);
-=======
-        IBluetoothGattService callback = mGattServiceTracker.get(servicePath+"#"+index);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         Log.d(TAG, "makeCharacteristicValueUpdatedCallback for service: " + charPath);
 
@@ -4712,11 +4555,7 @@ public class BluetoothService extends IBluetooth.Stub {
                 callback.onCharacteristicValueUpdated(charPath, result);
             } catch (Exception e) {
                 Log.e(TAG, "", e);
-<<<<<<< HEAD
                 forceCloseGattService(servicePath);
-=======
-                forceCloseGattService(servicePath, Integer.parseInt(index));
->>>>>>> 4119f2f... frameworks: add support for bluez stack
             }
         } else {
             Log.d(TAG, "Callback for service " + servicePath + " not registered");
@@ -4812,7 +4651,6 @@ public class BluetoothService extends IBluetooth.Stub {
         return true;
     }
 
-<<<<<<< HEAD
     public synchronized boolean discoverCharacteristics(String path) {
        mContext.enforceCallingOrSelfPermission(BLUETOOTH_PERM, "Need BLUETOOTH permission");
         if (!isEnabledInternal()) return false;
@@ -4826,58 +4664,6 @@ public class BluetoothService extends IBluetooth.Stub {
 
         boolean ret = discoverCharacteristicsNative(path);
 
-=======
-    public synchronized boolean discoverCharacteristics(String path, int serviceId) {
-        mContext.enforceCallingOrSelfPermission(BLUETOOTH_PERM, "Need BLUETOOTH permission");
-         if (!isEnabledInternal()) return false;
-
-         Log.d(TAG, "discoverCharacteristics Id : " + serviceId);
-         Log.d(TAG, "path : " + path);
-
-        if (!mGattServices.containsKey(path)) {
-             Log.d(TAG, "Service not present " + path);
-             return false;
-         }
-
-        boolean ret = false;
-        ArrayList<String> objPathSrvIdList = mGattOperationTracker.get("discoverChar");
-        String pathSrvId = path+"#"+Integer.toString(serviceId);
-        if(objPathSrvIdList != null && (objPathSrvIdList.size() > 0)) {
-            Log.d(TAG, "objPathSrvIdList not null");
-            Log.d(TAG, "objPathSrvIdList length:"+objPathSrvIdList.size());
-            for(int i=0;i < objPathSrvIdList.size();i++) {
-                String objSvId = objPathSrvIdList.get(i);
-                String[] arrStr = objSvId.split("#");
-                Log.d(TAG, "objSvId::"+objSvId);
-                if(arrStr[0] != null && !arrStr[0].equalsIgnoreCase(path)){
-                    //start discovery only when the srv path is not already registered for
-                    //discover char in mGattOperationTracker
-                    Log.d(TAG, "srv path is not already registered for discover char in mGattOperationTracker");
-                    if(serviceId >= 0) {
-                        Log.d(TAG, "Calling discoverCharacteristicsNative " + path + "#" +Integer.toString(serviceId));
-                        ret = discoverCharacteristicsNative(path, "#"+Integer.toString(serviceId));
-                    }
-                }
-                else {
-                    Log.d(TAG, "srv path is already registered for discover char in mGattOperationTracker. So will not call discover char again");
-                }
-                if(!objPathSrvIdList.contains(pathSrvId)) {
-                    objPathSrvIdList.add(pathSrvId);
-                }
-                mGattOperationTracker.put("discoverChar",objPathSrvIdList);
-            }
-        }
-        else {
-            Log.d(TAG, "objPathSrvIdList is null");
-            objPathSrvIdList = new ArrayList<String>();
-            objPathSrvIdList.add(pathSrvId);
-            mGattOperationTracker.put("discoverChar",objPathSrvIdList);
-            if(serviceId >= 0) {
-                Log.d(TAG, "Calling discoverCharacteristicsNative " + path + "#" +Integer.toString(serviceId));
-                ret = discoverCharacteristicsNative(path, "#"+Integer.toString(serviceId));
-            }
-        }
->>>>>>> 4119f2f... frameworks: add support for bluez stack
         return ret;
     }
 
@@ -4960,11 +4746,7 @@ public class BluetoothService extends IBluetooth.Stub {
     }
 
     public synchronized boolean setCharacteristicProperty(String path, String key, byte[] value,
-<<<<<<< HEAD
             boolean reliable) {
-=======
-            boolean reliable, int serviceId) {
->>>>>>> 4119f2f... frameworks: add support for bluez stack
         mContext.enforceCallingOrSelfPermission(BLUETOOTH_PERM, "Need BLUETOOTH permission");
         if (!isEnabledInternal()) return false;
 
@@ -4983,26 +4765,12 @@ public class BluetoothService extends IBluetooth.Stub {
             return false;
         }
 
-<<<<<<< HEAD
         boolean ret = setCharacteristicPropertyNative(path, key, value, value.length, reliable);
-=======
-        boolean ret = false;
-        if(serviceId >= 0) {
-             Log.d(TAG, "Calling setCharacteristicPropertyNative " + path + "#" +
-                   Integer.toString(serviceId));
-             ret = setCharacteristicPropertyNative(path, key, "#"+Integer.toString(serviceId), value,
-                                                   value.length, reliable);
-        }
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         return ret;
     }
 
-<<<<<<< HEAD
     public synchronized boolean updateCharacteristicValue(String path) {
-=======
-    public synchronized boolean updateCharacteristicValue(String path, int serviceId) {
->>>>>>> 4119f2f... frameworks: add support for bluez stack
         mContext.enforceCallingOrSelfPermission(BLUETOOTH_PERM, "Need BLUETOOTH permission");
         if (!isEnabledInternal()) return false;
 
@@ -5023,40 +4791,20 @@ public class BluetoothService extends IBluetooth.Stub {
             return false;
         }
 
-<<<<<<< HEAD
         return updateCharacteristicValueNative(path);
     }
 
     public synchronized boolean registerCharacteristicsWatcher(String path, IBluetoothGattService gattCallback) {
-=======
-        boolean ret = false;
-        if(serviceId >= 0) {
-           Log.d(TAG, "Calling updateCharacteristicValueNative " + path + "#" +Integer.toString(serviceId));
-           ret = updateCharacteristicValueNative(path, "#"+Integer.toString(serviceId));
-        }
-
-        return ret;
-    }
-
-    public synchronized boolean registerCharacteristicsWatcher(String path,
-                                                               IBluetoothGattService gattCallback,
-                                                               int serviceId) {
->>>>>>> 4119f2f... frameworks: add support for bluez stack
        mContext.enforceCallingOrSelfPermission(BLUETOOTH_PERM, "Need BLUETOOTH permission");
         if (!isEnabledInternal()) return false;
 
         Log.d(TAG, "registerCharacteristicsWatcher");
-<<<<<<< HEAD
-=======
-        boolean ret = false;
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
        if (!mGattServices.containsKey(path)) {
             Log.d(TAG, "Service not present " + path);
             return false;
         }
 
-<<<<<<< HEAD
         if (mGattWatcherTracker.get(path) != null) {
             // Do not add this callback
             Log.d(TAG, "registerCharacteristicsWatcher: already registered for " + path);
@@ -5068,42 +4816,11 @@ public class BluetoothService extends IBluetooth.Stub {
         if (ret == true) {
             mGattWatcherTracker.put(path, gattCallback);
         }
-=======
-       HashMap<Integer, IBluetoothGattService> watcherServices;
-       if (mGattWatcherTracker.containsKey(path)) {
-           Log.d(TAG, "Object path exists in the watcher tracker");
-           watcherServices = mGattWatcherTracker.get(path);
-
-           if(watcherServices.containsKey(serviceId)) {
-               // Do not add this callback
-               Log.d(TAG, "registerCharacteristicsWatcher: already registered for " + path);
-               return false;
-           }
-           watcherServices.put(new Integer(serviceId), gattCallback);
-           ret = true;
-       } else {
-           Log.d(TAG, "Create new watcher service");
-           watcherServices = new HashMap<Integer, IBluetoothGattService>();
-           ret = registerCharacteristicsWatcherNative(path);
-
-           if (ret) {
-               Log.d(TAG, "wactcher registered successfully adding " +
-                     serviceId + " " + gattCallback);
-               watcherServices.put(new Integer(serviceId), gattCallback);
-           }
-       }
-
-       mGattWatcherTracker.put(path, watcherServices);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         return ret;
    }
 
-<<<<<<< HEAD
     public synchronized boolean deregisterCharacteristicsWatcher(String path) {
-=======
-    public synchronized boolean deregisterCharacteristicsWatcher(String path, int serviceId) {
->>>>>>> 4119f2f... frameworks: add support for bluez stack
        mContext.enforceCallingOrSelfPermission(BLUETOOTH_PERM, "Need BLUETOOTH permission");
         if (!isEnabledInternal()) return false;
 
@@ -5114,32 +4831,13 @@ public class BluetoothService extends IBluetooth.Stub {
 
         Log.d(TAG, "deregisterCharacteristicsWatcher");
 
-<<<<<<< HEAD
         boolean ret = deregisterCharacteristicsWatcherNative(path);
 
         mGattWatcherTracker.remove(path);
-=======
-        boolean ret = false;
-
-        Log.d(TAG, "deregisterCharacteristicsWatcher id " + serviceId);
-        HashMap<Integer, IBluetoothGattService> watcherServices = mGattWatcherTracker.get(path);
-        if(watcherServices != null) {
-            if(watcherServices.size() == 1) {
-                Log.d(TAG, "Only watcher service..deregister");
-                ret = deregisterCharacteristicsWatcherNative(path);
-                mGattWatcherTracker.remove(path);
-            } else {
-                Log.d(TAG, "other watcher services exist for the obj path");
-                watcherServices.remove(new Integer(serviceId));
-                return true;
-            }
-        }
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         return ret;
     }
 
-<<<<<<< HEAD
     public synchronized boolean startRemoteGattService(String path, IBluetoothGattService gattCallback) {
         mContext.enforceCallingOrSelfPermission(BLUETOOTH_PERM, "Need BLUETOOTH permission");
         if (!isEnabledInternal()) return false;
@@ -5153,39 +4851,6 @@ public class BluetoothService extends IBluetooth.Stub {
         }
 
         mGattServiceTracker.put(path, gattCallback);
-=======
-    public synchronized int startRemoteGattService(String path, IBluetoothGattService gattCallback) {
-        mContext.enforceCallingOrSelfPermission(BLUETOOTH_PERM, "Need BLUETOOTH permission");
-        if (!isEnabledInternal()) return -1;
-
-        Log.d(TAG, "startRemoteGattService(");
-        int serviceId = -1;
-
-        Log.d(TAG, "add : " + gattCallback + "path" + path);
-        if(usedSrvIds != null) {
-            for(int i=1; i < 200; i++) {
-                if(!usedSrvIds.contains(new Integer(i))) {
-                    serviceId = i;
-                    break;
-                }
-            }
-        }
-        Log.d(TAG, "Service id for path "+path+" assigned is "+serviceId);
-        usedSrvIds.add(serviceId);
-
-        Log.d(TAG, "serviceId in startRemoteGattService"+serviceId);
-
-        String objPath = path + "#" + serviceId;
-        Log.d(TAG, "Add obj path to service tracker " + objPath + "size " + objPath.length());
-
-        if (mGattServiceTracker.get(objPath) != null) {
-            // Do not add this callback, its already there
-            Log.d(TAG, "startRemoteGattService: callback already registered " + path);
-            return -1;
-        }
-
-        mGattServiceTracker.put(objPath, gattCallback);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         if (!mGattServices.containsKey(path))
             mGattServices.put(path, 1);
@@ -5196,17 +4861,10 @@ public class BluetoothService extends IBluetooth.Stub {
             mGattServices.put(path, refCount);
         }
 
-<<<<<<< HEAD
         return true;
     }
 
     private void clearGattService(String path, boolean flush) {
-=======
-        return serviceId;
-    }
-
-    private void clearGattService(String path, boolean flush, int serviceId) {
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         Map<String, String> properties = mGattProperties.get(path);
 
@@ -5224,7 +4882,6 @@ public class BluetoothService extends IBluetooth.Stub {
         if (flush)
             removeGattServiceProperties(path);
 
-<<<<<<< HEAD
         mGattServiceTracker.remove(path);
         mGattWatcherTracker.remove(path);
     }
@@ -5237,37 +4894,6 @@ public class BluetoothService extends IBluetooth.Stub {
     }
 
     public synchronized void closeRemoteGattService(String path) {
-=======
-        if(serviceId < 0) {
-            Log.d(TAG, "Clear all gatt services callback for the obj path " + path);
-            Iterator<Map.Entry<String, IBluetoothGattService>> it = mGattServiceTracker.entrySet().iterator();
-            while(it.hasNext()) {
-                Map.Entry<String, IBluetoothGattService> entry = it.next();
-                String objPath = entry.getKey();
-                String[] splits = objPath.split("#");
-                Log.d(TAG, "Splits " + splits[0]);
-                if(path.equals(splits[0])) {
-                    Log.d(TAG, "Remove matched path in service tracker " + splits[0]);
-                    it.remove();
-                }
-            }
-        } else {
-            Log.d(TAG, "Clear the gatt service callback for path : " + path);
-            mGattServiceTracker.remove(path);
-        }
-
-        mGattWatcherTracker.remove(path);
-    }
-
-    private void forceCloseGattService(String path, int serviceId) {
-
-        Log.d(TAG, "Cleanup GATT service " + path);
-        clearGattService(path, false, serviceId);
-        mGattServices.remove(path);
-    }
-
-    public synchronized void closeRemoteGattService(String path, int serviceId) {
->>>>>>> 4119f2f... frameworks: add support for bluez stack
         mContext.enforceCallingOrSelfPermission(BLUETOOTH_PERM, "Need BLUETOOTH permission");
 
         if (!mGattServices.containsKey(path)) {
@@ -5279,14 +4905,6 @@ public class BluetoothService extends IBluetooth.Stub {
         refCount--;
 
         Log.d(TAG, "removeRemoteGattService: refCount for " + path + " is " + refCount);
-<<<<<<< HEAD
-=======
-        String objPath = path + "#" + serviceId;
-        //Remove the service id from used srv ids list
-        usedSrvIds.remove(new Integer(serviceId));
-        mGattServiceTracker.remove(objPath);
-        Log.d(TAG, "Removing service Id "+serviceId+ "from used service list");
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         if (refCount > 0) {
             mGattServices.remove(path);
@@ -5294,11 +4912,7 @@ public class BluetoothService extends IBluetooth.Stub {
             return;
         }
 
-<<<<<<< HEAD
         forceCloseGattService(path);
-=======
-        forceCloseGattService(path, serviceId);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         if (!isEnabledInternal()) return;
 
@@ -5359,11 +4973,7 @@ public class BluetoothService extends IBluetooth.Stub {
         services = value.split(",");
 
         for(int i = 0; i < services.length; i++)
-<<<<<<< HEAD
             clearGattService(services[i], true);
-=======
-            clearGattService(services[i], true, -1);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
 
         setRemoteDeviceProperty(address, "Services", null);
     }
@@ -5887,11 +5497,7 @@ public class BluetoothService extends IBluetooth.Stub {
     native boolean discoverPrimaryServicesNative(String path);
     private native String createLeDeviceNative(String address);
     private native Object[] getGattServicePropertiesNative(String path);
-<<<<<<< HEAD
     private native boolean discoverCharacteristicsNative(String path);
-=======
-    private native boolean discoverCharacteristicsNative(String path, String data);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
     private native int gattConnectNative(String path, int prohibitRemoteChg, int filterPolicy,
                                              int scanInterval, int scanWindow, int intervalMin,
                                              int intervalMax, int latency, int superVisionTimeout,
@@ -5903,14 +5509,8 @@ public class BluetoothService extends IBluetooth.Stub {
                                              int minCeLen, int maxCeLen, int connTimeOut);
     private native boolean gattLeConnectCancelNative(String path);
     private native Object[] getCharacteristicPropertiesNative(String path);
-<<<<<<< HEAD
     private native boolean setCharacteristicPropertyNative(String path, String key, byte[] value, int length, boolean reliable);
     private native boolean updateCharacteristicValueNative(String path);
-=======
-    private native boolean setCharacteristicPropertyNative(String path, String key, String serviceId,
-                                                           byte[] value, int length, boolean reliable);
-    private native boolean updateCharacteristicValueNative(String path, String serviceId);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
     private native boolean registerCharacteristicsWatcherNative(String path);
     private native boolean deregisterCharacteristicsWatcherNative(String path);
     private native boolean disconnectGattNative(String path);

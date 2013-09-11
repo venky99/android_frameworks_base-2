@@ -1,9 +1,5 @@
 /*
  * Copyright (C) 2008 The Android Open Source Project
-<<<<<<< HEAD
-=======
- * Copyright (c) 2013 The Linux Foundation. All rights reserved.
->>>>>>> 4119f2f... frameworks: add support for bluez stack
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,13 +133,6 @@ public final class BluetoothA2dp implements BluetoothProfile {
         mServiceListener = null;
     }
 
-<<<<<<< HEAD
-=======
-    public void finalize() {
-        close();
-    }
-
->>>>>>> 4119f2f... frameworks: add support for bluez stack
     /**
      * Initiate connection to a profile of the remote bluetooth device.
      *

@@ -1,10 +1,6 @@
 /*
  * Copyright (C) 2011 The Android Open Source Project
-<<<<<<< HEAD
  * Copyright (c) 2013 The Linux Foundation. All rights reserved
-=======
- * Copyright (c) 2013 The Linux Foundation. All rights reserved.
->>>>>>> 4119f2f... frameworks: add support for bluez stack
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -290,7 +286,6 @@ final class BluetoothPanProfileHandler {
             }
         } else {
             // PANU Role = reverse Tether
-<<<<<<< HEAD
 			// MR1 Change
             if (state == BluetoothPan.STATE_CONNECTED) {
                 BluetoothTetheringDataTracker.getInstance().startReverseTether(iface);
@@ -298,14 +293,6 @@ final class BluetoothPanProfileHandler {
                   (prevState == BluetoothPan.STATE_CONNECTED ||
                   prevState == BluetoothPan.STATE_DISCONNECTING)) {
                 BluetoothTetheringDataTracker.getInstance().stopReverseTether(/*panDevice.mIface*/);
-=======
-            if (state == BluetoothPan.STATE_CONNECTED) {
-                BluetoothTetheringDataTracker.getInstance().startReverseTether(iface, device);
-            } else if (state == BluetoothPan.STATE_DISCONNECTED &&
-                  (prevState == BluetoothPan.STATE_CONNECTED ||
-                  prevState == BluetoothPan.STATE_DISCONNECTING)) {
-                BluetoothTetheringDataTracker.getInstance().stopReverseTether(panDevice.mIface);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
             }
         }
 
@@ -415,10 +402,6 @@ final class BluetoothPanProfileHandler {
             }
         } catch (Exception e) {
             Log.e(TAG, "Error configuring interface " + iface + ", :" + e);
-<<<<<<< HEAD
-=======
-            mBluetoothIfaceAddresses.remove(address);
->>>>>>> 4119f2f... frameworks: add support for bluez stack
             return null;
         }
         return address;
